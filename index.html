@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2026 台灣汽車／機車牌照稅 × 燃料費試算（含過戶按日分攤）</title>
+  <meta name="description" content="依 2026 財政部與交通部最新級距，一秒試算自用小客車、機車（黃牌/紅牌/白牌）與電動車牌照稅及公路養管費（燃料費），支援買賣過戶按日計算。" />
+  <meta name="keywords" content="2026牌照稅,燃料費級距表,汽車稅金試算,重機牌照稅,公路養管費" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026 台灣汽車／機車牌照稅 × 燃料費試算（含過戶按日分攤）",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "All",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "TWD" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "1800cc汽車一年牌照稅跟燃料費總共多少？", "acceptedAnswer": {"@type": "Answer", "text": "1,201～1,800cc 汽油自用小客車每年牌照稅為 7,120 元、燃料費 4,800 元，合計一年 11,920 元。"}}]}
+  </script>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --accent: #ea580c;
+      --accent-bg: #fff7ed;
+      --good: #059669;
+      --warn: #d97706;
+      --danger: #dc2626;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .container { max-width: 960px; margin: 0 auto; padding: 20px 16px 48px; }
+    header { text-align: center; margin-bottom: 24px; }
+    header h1 { font-size: 1.6rem; margin: 0 0 8px; }
+    header p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+    .badge {
+      display: inline-block; background: #e0f2fe; color: var(--primary-dark);
+      font-size: 0.78rem; font-weight: 600; padding: 3px 10px; border-radius: 999px; margin-bottom: 8px;
+    }
+    .tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+    .tab-btn {
+      padding: 12px; border: 1px solid var(--border); background: var(--card);
+      border-radius: 10px; font-size: 0.98rem; font-weight: 600; cursor: pointer; color: var(--muted);
+    }
+    .tab-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+      padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+    }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 680px) { .grid-2 { grid-template-columns: 1fr; } }
+    label { display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 6px; }
+    input[type="number"], select {
+      width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; background: #fff;
+    }
+    .pill-group, .preset-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+    .pill, .chip {
+      padding: 7px 12px; border: 1px solid var(--border); background: #f8fafc;
+      border-radius: 8px; font-size: 0.86rem; font-weight: 600; cursor: pointer;
+    }
+    .pill.active { background: #e0f2fe; border-color: var(--primary); color: var(--primary-dark); }
+    .chip { border-radius: 999px; font-weight: 500; }
+    .chip:hover { border-color: var(--primary); color: var(--primary-dark); }
+    .result-box { margin-top: 18px; padding: 16px; border-radius: 12px; background: #f1f5f9; }
+    .result-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+    .metric { background: #fff; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--border); }
+    .metric .label { font-size: 0.8rem; color: var(--muted); }
+    .metric .value { font-size: 1.3rem; font-weight: 700; margin-top: 2px; }
+    .metric .value.highlight { color: var(--primary-dark); }
+    .metric .value.good { color: var(--good); }
+    .metric .value.warn { color: var(--warn); }
+    .metric .value.danger { color: var(--danger); }
+    .gear-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+    .gear-card {
+      border: 1px solid var(--border); border-radius: 12px; padding: 14px;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .gear-tag {
+      display: inline-block; font-size: 0.75rem; font-weight: 700; color: var(--accent);
+      background: var(--accent-bg); padding: 2px 8px; border-radius: 6px; margin-bottom: 6px;
+    }
+    .gear-card h3 { font-size: 1rem; margin: 0 0 6px; }
+    .gear-card p { font-size: 0.85rem; color: var(--muted); margin: 0 0 12px; }
+    .cta-btn {
+      display: block; text-align: center; padding: 9px 12px; border-radius: 8px;
+      background: var(--accent); color: #fff; text-decoration: none; font-weight: 700; font-size: 0.9rem;
+    }
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.88rem; }
+    th, td { padding: 8px 10px; border-bottom: 1px solid var(--border); text-align: left; }
+    th { color: var(--muted); font-weight: 600; }
+    .seo-section h2 { font-size: 1.15rem; margin: 0 0 10px; }
+    .seo-section h3 { font-size: 1rem; margin: 18px 0 6px; color: var(--primary-dark); }
+    .seo-section p, .seo-section li { font-size: 0.92rem; color: #334155; }
+    .hidden { display: none; }
+    footer { text-align: center; font-size: 0.8rem; color: var(--muted); margin-top: 28px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="badge">依據 2026 台灣現行使用牌照稅與公路養管費級距</div>
+      <h1>2026 汽機車牌照稅 × 燃料費試算器</h1>
+      <p>支援自用小客車（汽油/柴油/純電）、白牌／黃牌／紅牌機車及中古車過戶按日分攤試算</p>
+    </header>
+
+    
+        <section class="card">
+          <div class="grid-2">
+            <div><label for="vehType">車輛類型</label>
+              <select id="vehType">
+                <option value="car_1201_1800" selected>自用小客車 1,201～1,800 cc（常見 1.5/1.8L）</option>
+                <option value="car_1801_2400">自用小客車 1,801～2,400 cc（常見 2.0L）</option>
+                <option value="car_601_1200">自用小客車 601～1,200 cc（常見 1.0/1.2L）</option>
+                <option value="car_2401_3000">自用小客車 2,401～3,000 cc</option>
+                <option value="car_ev">純電動汽車（2030年底前免稅）</option>
+                <option value="moto_51_125">普通輕/重型機車 51～125 cc</option>
+                <option value="moto_126_150">白牌機車 126～150 cc</option>
+                <option value="moto_151_250">黃牌重機 151～250 cc</option>
+                <option value="moto_251_500">紅/黃牌重機 251～500 cc</option>
+                <option value="moto_601_1200">紅牌重機 601～1,200 cc</option>
+              </select>
+            </div>
+            <div><label for="daysInput">持有天數（全年 365 天，買賣過戶可改天數）</label><input type="number" id="daysInput" value="365" min="1" max="366" /></div>
+          </div>
+          <div class="result-box">
+            <div class="result-grid">
+              <div class="metric"><div class="label">使用牌照稅（4月開徵）</div><div class="value highlight" id="licTaxEl">--</div></div>
+              <div class="metric"><div class="label">燃料費 / 養管費（7月開徵）</div><div class="value" id="fuelTaxEl">--</div></div>
+              <div class="metric"><div class="label">合計應繳年稅金</div><div class="value warn" id="totalTaxEl">--</div></div>
+            </div>
+          </div>
+        </section>
+
+    <section class="card">
+      <h2 style="font-size: 1.15rem; margin: 0 0 6px;">車主行車安全與省錢必備裝備</h2>
+      <p style="margin: 0 0 14px; color: var(--muted); font-size: 0.88rem;">繳完稅別忘了檢查行車安全設備，關鍵時刻能自保也能省下高額維修費（含合作推廣連結）</p>
+      <div class="gear-grid" id="gearGrid"></div>
+    </section>
+
+    <article class="card seo-section">
+      
+          <h2>2026 自用小客車與機車稅金級距總表</h2>
+          <p>台灣車輛每年固定支出為 4 月開徵的「使用牌照稅」與 7 月開徵的「公路使用養護安全管理費（原燃料費）」。<strong>150cc（含）以下白牌機車免繳牌照稅</strong>，僅需繳納燃料費；純電動車則免徵牌照稅至 2030 年底。</p>
+    </article>
+
+    <footer>
+      <p>註：純電動車免徵使用牌照稅優惠已延長至 2030/12/31，並免繳公路養管費（燃料費）。 | <a href="https://jimmycmhsieh0801-cloud.github.io/">更多實用工具總目錄</a></p>
+    </footer>
+  </div>
+
+  <script src="affiliate_config.js"></script>
+  <script src="app.js"></script>
+  <script>
+    if (typeof AFFILIATE_GEARS !== "undefined") {
+      const grid = document.getElementById("gearGrid");
+      if (grid && !grid.innerHTML.trim()) {
+        grid.innerHTML = AFFILIATE_GEARS.map(
+          (g) => `
+          <div class="gear-card">
+            <div>
+              <span class="gear-tag">${g.tag}</span>
+              <h3>${g.title}</h3>
+              <p>${g.desc}</p>
+            </div>
+            <a class="cta-btn" href="${g.url}" target="_blank" rel="noopener noreferrer nofollow">${g.cta} →</a>
+          </div>`
+        ).join("");
+      }
+    }
+  </script>
+</body>
+</html>
